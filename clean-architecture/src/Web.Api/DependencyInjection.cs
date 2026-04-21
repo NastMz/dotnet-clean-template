@@ -7,7 +7,7 @@ public static class DependencyInjection
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddSwaggerGen();
+        services.AddOpenApi();
 
         // REMARK: If you want to use Controllers, you'll need this.
         services.AddControllers();

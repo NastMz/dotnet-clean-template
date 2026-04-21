@@ -3,6 +3,7 @@ using Application;
 using HealthChecks.UI.Client;
 using Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Scalar.AspNetCore;
 using Serilog;
 using Web.Api;
 using Web.Api.Extensions;
@@ -10,8 +11,6 @@ using Web.Api.Extensions;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog((context, loggerConfig) => loggerConfig.ReadFrom.Configuration(context.Configuration));
-
-builder.Services.AddSwaggerGenWithAuth();
 
 builder.Services
     .AddApplication()
@@ -26,7 +25,8 @@ app.MapEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerWithUi();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 
     app.ApplyMigrations();
 }

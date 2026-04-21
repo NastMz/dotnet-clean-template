@@ -346,7 +346,8 @@ Both templates include:
 - health checks for PostgreSQL;
 - `/health` endpoint;
 - request context logging middleware;
-- Swagger/OpenAPI setup;
+- OpenAPI document generation at `/openapi/v1.json`;
+- Scalar API reference at `/scalar/v1`;
 - global exception handling.
 
 The Docker Compose template additionally includes Serilog and Seq configuration.

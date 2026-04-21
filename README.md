@@ -66,7 +66,7 @@ The generated application includes:
 - domain events dispatched from EF Core save changes;
 - endpoint classes over Minimal APIs;
 - Problem Details error responses;
-- Swagger/OpenAPI;
+- Scalar/OpenAPI API reference;
 - health checks;
 - architecture tests.
 
@@ -145,6 +145,8 @@ Run the API project directly:
 ```powershell
 dotnet run --project .\src\Web.Api\Web.Api.csproj
 ```
+
+In Development, the OpenAPI document is exposed at `/openapi/v1.json` and the Scalar API reference is available at `/scalar/v1`.
 
 For the Docker Compose template, you can also use Docker Compose from the generated project root:
 

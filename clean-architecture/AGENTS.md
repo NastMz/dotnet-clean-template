@@ -21,7 +21,7 @@
 - Implement proper exception handling and structured logging.
 - Use strongly typed configuration with the options pattern when configuration grows beyond trivial values.
 - Implement authentication and authorization deliberately; do not bypass policies for convenience.
-- Use Swagger/OpenAPI for API documentation.
+- Use Scalar/OpenAPI for API documentation.
 - Use environment-specific configuration files.
 - Use HTTPS and secure defaults.
 - Validate input at the application boundary.

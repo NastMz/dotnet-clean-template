@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <PackageId>NastMz.CleanArchitecture.Templates</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>NastMz</Authors>
+    <Description>Template pack for the Clean Architecture and Aspire starter templates.</Description>
+    <PackageType>Template</PackageType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <EnableDefaultItems>false</EnableDefaultItems>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <IsPackable>true</IsPackable>
+    <NoWarn>$(NoWarn);NU5105;NU5128</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md"
+          Pack="true"
+          PackagePath="\" />
+    <None Include="clean-architecture\**\*"
+          Exclude="clean-architecture\**\bin\**;clean-architecture\**\obj\**;clean-architecture\**\.vs\**;clean-architecture\**\.idea\**;clean-architecture\**\.git\**;clean-architecture\**\.containers\**;clean-architecture\**\*.user;clean-architecture\**\*.suo;clean-architecture\**\*.userosscache;clean-architecture\**\*.cache"
+          Pack="true"
+          PackagePath="content\clean-architecture\" />
+    <None Include="aspire-template\**\*"
+          Exclude="aspire-template\**\bin\**;aspire-template\**\obj\**;aspire-template\**\.vs\**;aspire-template\**\.idea\**;aspire-template\**\.git\**;aspire-template\**\.containers\**;aspire-template\**\*.user;aspire-template\**\*.suo;aspire-template\**\*.userosscache;aspire-template\**\*.cache"
+          Pack="true"
+          PackagePath="content\aspire-template\" />
+  </ItemGroup>
+</Project>

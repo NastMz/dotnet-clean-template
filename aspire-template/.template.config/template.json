@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "NastMz",
+  "classifications": [
+    "Architecture",
+    "Clean Architecture",
+    "Aspire"
+  ],
+  "identity": "NastMz.CleanArchitecture.Templates.Aspire",
+  "name": "NastMz Clean Architecture Aspire",
+  "shortName": "nast-clean-aspire",
+  "sourceName": "CleanArchitecture",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "forms": {
+    "DotToHyphen": {
+      "identifier": "replace",
+      "pattern": "\\.",
+      "replacement": "-"
+    },
+    "AppendWebApi": {
+      "identifier": "replace",
+      "pattern": "^(.+)$",
+      "replacement": "$1-web-api"
+    }
+  },
+  "symbols": {
+    "nameLower": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      }
+    },
+    "databaseName": {
+      "type": "derived",
+      "valueSource": "nameLower",
+      "valueTransform": "DotToHyphen",
+      "replaces": "clean-architecture",
+      "description": "Database slug used by the sample app and Aspire hosting."
+    },
+    "webApiServiceName": {
+      "type": "derived",
+      "valueSource": "databaseName",
+      "valueTransform": "AppendWebApi",
+      "replaces": "web-api",
+      "description": "Compose service name used by the hosting project."
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "modifiers": [
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            "**/.vs/**",
+            "**/.idea/**",
+            "**/.git/**",
+            "**/.containers/**",
+            "**/*.user",
+            "**/*.suo",
+            "**/*.userosscache",
+            "**/*.cache"
+          ]
+        }
+      ]
+    }
+  ]
+}

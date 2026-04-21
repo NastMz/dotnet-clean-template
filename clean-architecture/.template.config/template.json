@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "NastMz",
+  "classifications": [
+    "Architecture",
+    "Clean Architecture"
+  ],
+  "identity": "NastMz.CleanArchitecture.Templates.CleanArchitecture",
+  "name": "NastMz Clean Architecture",
+  "shortName": "nast-clean",
+  "sourceName": "CleanArchitecture",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "forms": {
+    "DotToHyphen": {
+      "identifier": "replace",
+      "pattern": "\\.",
+      "replacement": "-"
+    },
+    "AppendWebApi": {
+      "identifier": "replace",
+      "pattern": "^(.+)$",
+      "replacement": "$1-web-api"
+    }
+  },
+  "symbols": {
+    "nameLower": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "name",
+        "toLower": true
+      }
+    },
+    "databaseName": {
+      "type": "derived",
+      "valueSource": "nameLower",
+      "valueTransform": "DotToHyphen",
+      "replaces": "clean-architecture",
+      "description": "Database, compose, and issuer slug."
+    },
+    "webApiServiceName": {
+      "type": "derived",
+      "valueSource": "databaseName",
+      "valueTransform": "AppendWebApi",
+      "replaces": "web-api",
+      "description": "Compose service and container/image name used by the Docker variant."
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "modifiers": [
+        {
+          "exclude": [
+            "**/[Bb]in/**",
+            "**/[Oo]bj/**",
+            "**/.vs/**",
+            "**/.idea/**",
+            "**/.git/**",
+            "**/.containers/**",
+            "**/*.user",
+            "**/*.suo",
+            "**/*.userosscache",
+            "**/*.cache"
+          ]
+        }
+      ]
+    }
+  ]
+}

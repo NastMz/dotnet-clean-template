@@ -22,10 +22,10 @@
     <None Include="clean-architecture\**\*"
           Exclude="clean-architecture\**\bin\**;clean-architecture\**\obj\**;clean-architecture\**\.vs\**;clean-architecture\**\.idea\**;clean-architecture\**\.git\**;clean-architecture\**\.containers\**;clean-architecture\**\*.user;clean-architecture\**\*.suo;clean-architecture\**\*.userosscache;clean-architecture\**\*.cache"
           Pack="true"
-          PackagePath="content\clean-architecture\" />
+          PackagePath="content\clean-architecture" />
     <None Include="aspire-template\**\*"
           Exclude="aspire-template\**\bin\**;aspire-template\**\obj\**;aspire-template\**\.vs\**;aspire-template\**\.idea\**;aspire-template\**\.git\**;aspire-template\**\.containers\**;aspire-template\**\*.user;aspire-template\**\*.suo;aspire-template\**\*.userosscache;aspire-template\**\*.cache"
           Pack="true"
-          PackagePath="content\aspire-template\" />
+          PackagePath="content\aspire-template" />
   </ItemGroup>
 </Project>

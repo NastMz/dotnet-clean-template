@@ -147,6 +147,7 @@ dotnet run --project .\src\Web.Api\Web.Api.csproj
 ```
 
 In Development, the OpenAPI document is exposed at `/openapi/v1.json` and the Scalar API reference is available at `/scalar/v1`.
+Scalar is configured with the template's JWT bearer security scheme, so you can authenticate requests in the API reference with the token returned by the login endpoint.
 
 For the Docker Compose template, you can also use Docker Compose from the generated project root:
 

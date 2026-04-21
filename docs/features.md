@@ -348,6 +348,7 @@ Both templates include:
 - request context logging middleware;
 - OpenAPI document generation at `/openapi/v1.json`;
 - Scalar API reference at `/scalar/v1`;
+- JWT bearer security metadata in OpenAPI so Scalar can authenticate requests with login tokens;
 - global exception handling.
 
 The Docker Compose template additionally includes Serilog and Seq configuration.

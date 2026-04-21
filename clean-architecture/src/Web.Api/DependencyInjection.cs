@@ -7,7 +7,7 @@ public static class DependencyInjection
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
-        services.AddOpenApi();
+        services.AddOpenApi(options => options.AddBearerAuthentication());
 
         // REMARK: If you want to use Controllers, you'll need this.
         services.AddControllers();

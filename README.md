@@ -52,29 +52,25 @@ tests/
   ArchitectureTests/
 ```
 
-### `src/Application`
+The generated application includes:
 
-Contains use cases, command/query abstractions, handlers, validation, pipeline behaviors and application-level contracts.
+- a sample User/Todo domain;
+- CQRS-style commands and queries without MediatR;
+- command validation with FluentValidation decorators;
+- command/query logging decorators;
+- Result/Error primitives instead of exception-driven business flow;
+- JWT bearer authentication;
+- PBKDF2 password hashing;
+- permission-based authorization scaffolding;
+- EF Core + PostgreSQL persistence;
+- domain events dispatched from EF Core save changes;
+- endpoint classes over Minimal APIs;
+- Problem Details error responses;
+- Swagger/OpenAPI;
+- health checks;
+- architecture tests.
 
-### `src/Domain`
-
-Contains entities, value/domain concepts, domain events and domain errors. This layer is isolated from infrastructure and web concerns.
-
-### `src/Infrastructure`
-
-Contains persistence, authentication, authorization, database configuration, time providers, domain event dispatching and external dependency implementations.
-
-### `src/SharedKernel`
-
-Contains shared primitives such as `Result`, `Error`, `Entity`, validation errors and domain event interfaces.
-
-### `src/Web.Api`
-
-Contains the ASP.NET Core API composition root, endpoints, middleware, exception handling, OpenAPI setup and HTTP-specific behavior.
-
-### `tests/ArchitectureTests`
-
-Contains architecture tests that protect dependency rules between layers.
+For the full breakdown, see [Template features](https://github.com/NastMz/dotnet-clean-template/blob/main/docs/features.md).
 
 ## Docker Compose template
 
@@ -93,7 +89,7 @@ docker-compose.dcproj
 launchSettings.json
 ```
 
-This is the simpler option when you want a regular ASP.NET Core API with local dependencies managed by Docker Compose.
+It includes local services for the API, PostgreSQL and Seq.
 
 ## Aspire template
 
@@ -111,11 +107,9 @@ src/
   Aspire.ServiceDefaults/
 ```
 
-`Aspire.AppHost` defines local orchestration for the application and its dependencies.
+`Aspire.AppHost` defines local orchestration for the application and PostgreSQL.
 
 `Aspire.ServiceDefaults` centralizes service discovery, health checks, resilience and OpenTelemetry defaults.
-
-This is the better option when you want an Aspire-based local development and orchestration experience.
 
 ## Generated repository files
 

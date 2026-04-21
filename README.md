@@ -1,68 +1,90 @@
 # NastMz Clean Architecture Templates
 
-`NastMz.CleanArchitecture.Templates` is a native .NET template pack for creating opinionated Clean Architecture projects from the command line with `dotnet new`.
+A native .NET template pack for creating opinionated Clean Architecture projects from the command line with `dotnet new`.
 
-## What gets installed?
-
-Installing the package registers two project templates in the .NET CLI:
-
-| Template | Short name | Creates |
-| --- | --- | --- |
-| NastMz Clean Architecture | `nast-clean` | Clean Architecture API with Docker Compose assets |
-| NastMz Clean Architecture Aspire | `nast-clean-aspire` | Clean Architecture API with .NET Aspire AppHost and ServiceDefaults |
-
-## Install from NuGet
-
-After the package is published:
+## Installation
 
 ```powershell
 dotnet new install NastMz.CleanArchitecture.Templates
 ```
 
-List the templates:
+Check that the templates are available:
 
 ```powershell
 dotnet new list nast
 ```
 
-Uninstall the package:
+## Available templates
 
-```powershell
-dotnet new uninstall NastMz.CleanArchitecture.Templates
-```
+| Template | Short name | Best for |
+| --- | --- | --- |
+| NastMz Clean Architecture | `nast-clean` | APIs that use Docker Compose for local infrastructure |
+| NastMz Clean Architecture Aspire | `nast-clean-aspire` | APIs that use .NET Aspire for orchestration and service defaults |
 
 ## Create a project
 
-Docker Compose variant:
+Create a Docker Compose based project:
 
 ```powershell
 dotnet new nast-clean -n MyCompany.MyApi
 ```
 
-Aspire variant:
+Create an Aspire based project:
 
 ```powershell
 dotnet new nast-clean-aspire -n MyCompany.MyPlatform
 ```
 
-The `-n` value replaces the baseline `CleanArchitecture` namespace/project name. Slug-based identifiers such as compose service names are also derived from the project name.
+The value passed to `-n` becomes the generated solution and namespace name. Infrastructure-friendly names, such as Docker Compose service names, are derived from it automatically.
 
-## Generated structure
+## What gets created?
 
-Both templates generate the same core architecture:
+Both templates generate the same core Clean Architecture structure:
 
 ```text
 src/
-  Application/       Use cases, CQRS abstractions, validation and behaviors
-  Domain/            Entities, domain events and domain errors
-  Infrastructure/    EF Core, authentication, authorization, time, persistence
-  SharedKernel/      Result, Error, Entity and domain-event primitives
-  Web.Api/           HTTP API endpoints, middleware and app composition
+  Application/
+  Domain/
+  Infrastructure/
+  SharedKernel/
+  Web.Api/
 tests/
-  ArchitectureTests/ Dependency boundary tests for the architecture
+  ArchitectureTests/
 ```
 
-The Docker Compose template also includes:
+### `src/Application`
+
+Contains use cases, command/query abstractions, handlers, validation, pipeline behaviors and application-level contracts.
+
+### `src/Domain`
+
+Contains entities, value/domain concepts, domain events and domain errors. This layer is isolated from infrastructure and web concerns.
+
+### `src/Infrastructure`
+
+Contains persistence, authentication, authorization, database configuration, time providers, domain event dispatching and external dependency implementations.
+
+### `src/SharedKernel`
+
+Contains shared primitives such as `Result`, `Error`, `Entity`, validation errors and domain event interfaces.
+
+### `src/Web.Api`
+
+Contains the ASP.NET Core API composition root, endpoints, middleware, exception handling, OpenAPI setup and HTTP-specific behavior.
+
+### `tests/ArchitectureTests`
+
+Contains architecture tests that protect dependency rules between layers.
+
+## Docker Compose template
+
+Use:
+
+```powershell
+dotnet new nast-clean -n MyCompany.MyApi
+```
+
+In addition to the core structure, this template includes Docker Compose assets for local infrastructure:
 
 ```text
 docker-compose.yml
@@ -71,17 +93,33 @@ docker-compose.dcproj
 launchSettings.json
 ```
 
-The Aspire template also includes:
+This is the simpler option when you want a regular ASP.NET Core API with local dependencies managed by Docker Compose.
+
+## Aspire template
+
+Use:
+
+```powershell
+dotnet new nast-clean-aspire -n MyCompany.MyPlatform
+```
+
+In addition to the core structure, this template includes:
 
 ```text
 src/
-  Aspire.AppHost/          Aspire orchestration
-  Aspire.ServiceDefaults/  OpenTelemetry, health checks, resilience and discovery defaults
+  Aspire.AppHost/
+  Aspire.ServiceDefaults/
 ```
 
-## Generated project conventions
+`Aspire.AppHost` defines local orchestration for the application and its dependencies.
 
-Generated projects include vendor-neutral agent instructions and repository hygiene files:
+`Aspire.ServiceDefaults` centralizes service discovery, health checks, resilience and OpenTelemetry defaults.
+
+This is the better option when you want an Aspire-based local development and orchestration experience.
+
+## Generated repository files
+
+Generated projects include repository hygiene and automation files:
 
 ```text
 AGENTS.md
@@ -92,70 +130,42 @@ AGENTS.md
 .github/workflows/build.yml
 ```
 
-`AGENTS.md` is intentionally used instead of Cursor-specific `.cursorrules` so the generated projects are not tied to one editor or AI vendor.
+`AGENTS.md` contains project guidance for AI coding agents and contributors. It is editor-agnostic and can be read by any tool or person working in the generated project.
 
-## Validate locally
+## Common commands after generation
 
-Install directly from the source folders while developing the templates:
+Move into the generated project folder:
 
 ```powershell
-dotnet new install .\clean-architecture
-dotnet new install .\aspire-template
+cd MyCompany.MyApi
 ```
 
-Validate the distributable package locally:
+Run architecture tests:
 
 ```powershell
-dotnet pack .\NastMz.CleanArchitecture.Templates.csproj -c Release -o .\artifacts\packages
-dotnet new install .\artifacts\packages\NastMz.CleanArchitecture.Templates.1.0.0.nupkg
-dotnet new nast-clean -n Contoso.Orders -o .\artifacts\samples\orders
-dotnet new nast-clean-aspire -n Contoso.Platform -o .\artifacts\samples\platform
-dotnet test .\artifacts\samples\orders\tests\ArchitectureTests\ArchitectureTests.csproj
-dotnet test .\artifacts\samples\platform\tests\ArchitectureTests\ArchitectureTests.csproj
+dotnet test .\tests\ArchitectureTests\ArchitectureTests.csproj
+```
+
+Run the API project directly:
+
+```powershell
+dotnet run --project .\src\Web.Api\Web.Api.csproj
+```
+
+For the Docker Compose template, you can also use Docker Compose from the generated project root:
+
+```powershell
+docker compose up --build
+```
+
+For the Aspire template, run the AppHost:
+
+```powershell
+dotnet run --project .\src\Aspire.AppHost\Aspire.AppHost.csproj
+```
+
+## Uninstall
+
+```powershell
 dotnet new uninstall NastMz.CleanArchitecture.Templates
 ```
-
-Build, pack and test commands are useful feedback, but passing commands are not a substitute for checking that the generated project still satisfies the architecture and template requirements.
-
-## Release and NuGet publishing
-
-The root workflow `.github/workflows/release.yml` publishes the package when a version tag is pushed:
-
-```powershell
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-The workflow does three things:
-
-1. Packs `NastMz.CleanArchitecture.Templates.csproj` with the version from the tag.
-2. Publishes the `.nupkg` to NuGet.
-3. Creates a GitHub Release and attaches the `.nupkg`.
-
-### NuGet Trusted Publishing setup
-
-The workflow uses NuGet Trusted Publishing instead of a long-lived `NUGET_API_KEY`.
-
-Before the first release:
-
-1. In nuget.org, create a Trusted Publishing policy for this GitHub repository.
-2. Set the workflow file to `release.yml`.
-3. Add a GitHub Actions secret named `NUGET_USER` with the nuget.org username/profile that owns the package.
-4. Push a tag like `v1.0.0`.
-
-If you cannot use Trusted Publishing, replace the `NuGet/login@v1` step with a `NUGET_API_KEY` secret and `dotnet nuget push --api-key ${{ secrets.NUGET_API_KEY }}`.
-
-## Package contents
-
-The pack project includes both template roots as package content and excludes generated outputs/caches such as:
-
-```text
-bin/
-obj/
-.vs/
-.idea/
-.git/
-.containers/
-```
-
-Template dotfiles and `.github/` files are intentionally included so generated projects start with the same style, ignore, build and agent-instruction conventions.

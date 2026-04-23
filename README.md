@@ -166,13 +166,3 @@ dotnet run --project .\src\Aspire.AppHost\Aspire.AppHost.csproj
 ```powershell
 dotnet new uninstall NastMz.CleanArchitecture.Templates
 ```
-
-## Local template validation
-
-If you are iterating on the template pack locally and do not want to publish a NuGet release yet, validate the generated projects with:
-
-```powershell
-.\scripts\validate-generated-templates.ps1
-```
-
-The script packs the template locally, installs it from the generated `.nupkg`, creates both templates in a temporary directory, restores them, builds the entry projects, runs the architecture tests, and then cleans everything up.

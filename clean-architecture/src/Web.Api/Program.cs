@@ -2,6 +2,7 @@ using System.Reflection;
 using Application;
 using HealthChecks.UI.Client;
 using Infrastructure;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 using Serilog;
@@ -26,7 +27,7 @@ app.MapEndpoints();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference(options => options.AddPreferredSecuritySchemes(["Bearer"]));
+    app.MapScalarApiReference(options => options.AddPreferredSecuritySchemes(new List<string> { JwtBearerDefaults.AuthenticationScheme }));
 
     app.ApplyMigrations();
 }

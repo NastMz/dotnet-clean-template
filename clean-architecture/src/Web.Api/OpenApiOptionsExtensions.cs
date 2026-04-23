@@ -16,7 +16,7 @@ internal static class OpenApiOptionsExtensions
             {
                 Description = "Enter your JWT bearer token.",
                 Type = SecuritySchemeType.Http,
-                Scheme = JwtBearerDefaults.AuthenticationScheme.ToLowerInvariant(),
+                Scheme = "bearer",
                 BearerFormat = "JWT"
             };
 

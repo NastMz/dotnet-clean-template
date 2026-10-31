@@ -5,6 +5,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Native commands do not honor $ErrorActionPreference, so check every dotnet exit code explicitly.
+function Invoke-Dotnet {
+    dotnet @args
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "dotnet $($args -join ' ') failed with exit code $LASTEXITCODE."
+    }
+}
+
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $packageOutput = Join-Path $repoRoot "artifacts\packages"
 $scratchRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("nastmz-template-validation-" + [System.Guid]::NewGuid().ToString("N"))
@@ -22,27 +31,41 @@ try {
 
     Push-Location $repoRoot
 
-    dotnet restore .\NastMz.CleanArchitecture.Templates.csproj
-    dotnet pack .\NastMz.CleanArchitecture.Templates.csproj `
+    Invoke-Dotnet restore .\NastMz.CleanArchitecture.Templates.csproj
+    Invoke-Dotnet pack .\NastMz.CleanArchitecture.Templates.csproj `
         -c $Configuration `
         --no-restore `
         -o $packageOutput `
-        -p:PackageVersion=$PackageVersion `
-        -p:Version=$PackageVersion
+        "-p:PackageVersion=$PackageVersion" `
+        "-p:Version=$PackageVersion"
 
     dotnet new uninstall NastMz.CleanArchitecture.Templates | Out-Null
-    dotnet new install $packagePath
+    Invoke-Dotnet new install $packagePath
 
-    dotnet new nast-clean -n Validation.Clean -o $cleanOutput
-    dotnet new nast-clean-aspire -n Validation.Aspire -o $aspireOutput
+    Invoke-Dotnet new nast-clean -n Validation.Clean -o $cleanOutput
+    Invoke-Dotnet new nast-clean-aspire -n Validation.Aspire -o $aspireOutput
 
-    dotnet restore (Join-Path $cleanOutput "Validation.Clean.slnx")
-    dotnet build (Join-Path $cleanOutput "src\Web.Api\Web.Api.csproj") --no-restore -c $Configuration
-    dotnet test (Join-Path $cleanOutput "tests\ArchitectureTests\ArchitectureTests.csproj") --no-restore -c $Configuration
+    # Generated projects opt into Microsoft.Testing.Platform through their global.json,
+    # which dotnet only picks up when it runs from inside the generated directory.
+    Push-Location $cleanOutput
+    try {
+        Invoke-Dotnet restore "Validation.Clean.slnx"
+        Invoke-Dotnet build (Join-Path "src" "Web.Api" "Web.Api.csproj") --no-restore -c $Configuration
+        Invoke-Dotnet test --project (Join-Path "tests" "ArchitectureTests" "ArchitectureTests.csproj") --no-restore -c $Configuration
+    }
+    finally {
+        Pop-Location
+    }
 
-    dotnet restore (Join-Path $aspireOutput "Validation.Aspire.slnx")
-    dotnet build (Join-Path $aspireOutput "src\Aspire.AppHost\Aspire.AppHost.csproj") --no-restore -c $Configuration
-    dotnet test (Join-Path $aspireOutput "tests\ArchitectureTests\ArchitectureTests.csproj") --no-restore -c $Configuration
+    Push-Location $aspireOutput
+    try {
+        Invoke-Dotnet restore "Validation.Aspire.slnx"
+        Invoke-Dotnet build (Join-Path "src" "Aspire.AppHost" "Aspire.AppHost.csproj") --no-restore -c $Configuration
+        Invoke-Dotnet test --project (Join-Path "tests" "ArchitectureTests" "ArchitectureTests.csproj") --no-restore -c $Configuration
+    }
+    finally {
+        Pop-Location
+    }
 }
 finally {
     Pop-Location

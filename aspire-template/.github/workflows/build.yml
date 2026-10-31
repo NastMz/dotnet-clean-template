@@ -5,30 +5,35 @@ on:
   push:
     branches:
       - main
+  pull_request:
+
+permissions:
+  contents: read
 
 env:
-  DOTNET_VERSION: "9.x"
+  DOTNET_VERSION: "10.x"
+  DOTNET_NOLOGO: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v6
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
       - name: Restore
-        run: dotnet restore CleanArchitecture.sln
+        run: dotnet restore CleanArchitecture.slnx
 
       - name: Build
-        run: dotnet build CleanArchitecture.sln --configuration Release --no-restore
+        run: dotnet build CleanArchitecture.slnx --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test CleanArchitecture.sln --configuration Release --no-restore --no-build
+        run: dotnet test CleanArchitecture.slnx --configuration Release --no-restore --no-build
 
       - name: Publish
-        run: dotnet publish CleanArchitecture.sln --configuration Release --no-restore --no-build
+        run: dotnet publish CleanArchitecture.slnx --configuration Release --no-restore --no-build

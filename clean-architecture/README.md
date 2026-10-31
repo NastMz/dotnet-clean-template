@@ -7,7 +7,7 @@ What's included in the template?
 - Application layer with abstractions for:
   - CQRS
   - Example use cases
-  - Cross-cutting concerns (logging, validation)
+  - Cross-cutting concerns (logging, validation, caching)
 - Infrastructure layer with:
   - Authentication
   - Permission authorization

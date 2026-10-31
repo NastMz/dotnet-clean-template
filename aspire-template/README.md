@@ -7,14 +7,15 @@ What's included in the template?
 - Application layer with abstractions for:
   - CQRS
   - Example use cases
-  - Cross-cutting concerns (logging, validation)
+  - Cross-cutting concerns (logging, validation, caching)
 - Infrastructure layer with:
   - Authentication
   - Permission authorization
   - EF Core, PostgreSQL
-  - Serilog
-- Seq for searching and analyzing structured logs
-  - Seq is available at http://localhost:8081 by default
+- .NET Aspire
+  - `Aspire.AppHost` orchestrates the API and PostgreSQL
+  - `Aspire.ServiceDefaults` configures OpenTelemetry, health checks, resilience and service discovery
+  - Logs, traces and metrics are available in the Aspire dashboard
 - Testing projects
   - Architecture testing
 

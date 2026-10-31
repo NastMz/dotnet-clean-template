@@ -6,9 +6,9 @@ namespace Web.Api.Middleware;
 
 public class RequestContextLoggingMiddleware(RequestDelegate next, ILogger<RequestContextLoggingMiddleware> logger)
 {
-    private const string CorrelationIdHeaderName = "CorrelationId";
+    private const string CorrelationIdHeaderName = "Correlation-Id";
 
-    public Task Invoke(HttpContext context)
+    public async Task Invoke(HttpContext context)
     {
         var data = new Dictionary<string, object>
         {
@@ -25,7 +25,7 @@ public class RequestContextLoggingMiddleware(RequestDelegate next, ILogger<Reque
 
         using (logger.BeginScope(data))
         {
-            return next.Invoke(context);
+            await next.Invoke(context);
         }
     }
 

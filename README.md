@@ -120,6 +120,7 @@ AGENTS.md
 .editorconfig
 .gitignore
 .dockerignore
+global.json
 .github/dependabot.yml
 .github/workflows/build.yml
 ```
@@ -137,8 +138,10 @@ cd MyCompany.MyApi
 Run architecture tests:
 
 ```powershell
-dotnet test .\tests\ArchitectureTests\ArchitectureTests.csproj
+dotnet test --project .\tests\ArchitectureTests\ArchitectureTests.csproj
 ```
+
+Generated projects use xUnit v3 on Microsoft.Testing.Platform, enabled through the generated `global.json`. Run `dotnet test` from the project root, and add `--coverlet` to collect code coverage.
 
 Run the API project directly:
 

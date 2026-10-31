@@ -33,7 +33,7 @@ jobs:
         run: dotnet build CleanArchitecture.slnx --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test CleanArchitecture.slnx --configuration Release --no-restore --no-build
+        run: dotnet test --solution CleanArchitecture.slnx --configuration Release --no-restore --no-build
 
       - name: Publish
         run: dotnet publish CleanArchitecture.slnx --configuration Release --no-restore --no-build

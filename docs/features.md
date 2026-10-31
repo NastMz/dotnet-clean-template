@@ -28,6 +28,8 @@ Web.Api -> Infrastructure -> Application -> Domain
 
 The generated `ArchitectureTests` project uses NetArchTest and Shouldly to protect these rules.
 
+Tests run on xUnit v3 and Microsoft.Testing.Platform. The generated `global.json` opts `dotnet test` into that runner, so test commands use `--project` or `--solution` and must run from the generated project root. Code coverage is available through coverlet with `dotnet test --project <test project> --coverlet`.
+
 ## Domain model included
 
 The template ships with a small Todo/User sample domain so the generated project is not empty and demonstrates the intended patterns.
@@ -408,7 +410,7 @@ The template includes architecture tests that assert:
 Run them with:
 
 ```powershell
-dotnet test .\tests\ArchitectureTests\ArchitectureTests.csproj
+dotnet test --project .\tests\ArchitectureTests\ArchitectureTests.csproj
 ```
 
 ## What you are expected to replace

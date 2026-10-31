@@ -176,6 +176,16 @@ It logs:
 
 Logging calls are guarded with `logger.IsEnabled(...)` so generated projects stay compatible with analyzer rules such as CA1873 when warnings are treated as errors.
 
+### Caching decorator
+
+`CachingDecorator` wraps query handlers.
+
+Queries opt in by implementing `ICacheableQuery`, which provides a `CacheKey` and an optional `Expiration`. Queries that do not implement it go straight to the inner handler.
+
+Only successful results are cached. A failed `Result` (for example a not found error) is returned to the caller but never stored, so the next request runs the handler again.
+
+`ICache` is implemented in Infrastructure by `HybridCacheAdapter`, which uses `Microsoft.Extensions.Caching.Hybrid`. Include anything that changes the response, such as the current user id, in the cache key.
+
 ## Authentication
 
 Authentication is implemented with JWT bearer tokens.
@@ -297,7 +307,7 @@ Included endpoint groups:
   - complete
   - update
   - delete
-  - copy in the Docker Compose template
+  - copy
 
 Endpoint handlers call Application command/query handlers and convert `Result` values to HTTP responses.
 

@@ -10,6 +10,19 @@ updates:
       - "/aspire-template"
     schedule:
       interval: "weekly"
+    # The templates target a single .NET major (see Directory.Build.props). Packages versioned with the
+    # .NET release train must stay on that major, so their next major only lands with a deliberate TFM bump.
+    ignore:
+      - dependency-name: "Microsoft.AspNetCore.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Microsoft.EntityFrameworkCore*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Microsoft.Extensions.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Npgsql.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "EFCore.NamingConventions"
+        update-types: ["version-update:semver-major"]
     groups:
       template-dependencies:
         patterns:

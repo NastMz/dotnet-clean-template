@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "NastMz",
+  "classifications": [
+    "Architecture",
+    "Clean Architecture",
+    "CQRS"
+  ],
+  "identity": "NastMz.CleanArchitecture.Templates.Feature",
+  "name": "NastMz Clean Architecture Feature",
+  "description": "Adds a command or query use case (message, handler, validator and Minimal API endpoint) to a solution generated from nast-clean or nast-clean-aspire. Run it from the solution root.",
+  "shortName": "nast-feature",
+  "sourceName": "FeatureName",
+  "preferNameDirectory": false,
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "forms": {
+    "kebab": {
+      "identifier": "kebabCase"
+    },
+    "appendResponse": {
+      "identifier": "replace",
+      "pattern": "^(.+)$",
+      "replacement": "$1Response"
+    }
+  },
+  "symbols": {
+    "module": {
+      "type": "parameter",
+      "datatype": "text",
+      "isRequired": true,
+      "replaces": "ModuleName",
+      "fileRename": "ModuleName",
+      "description": "Feature folder that groups the use case, for example Todos or Users."
+    },
+    "kind": {
+      "type": "parameter",
+      "datatype": "choice",
+      "defaultValue": "command",
+      "choices": [
+        {
+          "choice": "command",
+          "description": "A state-changing use case (ICommand / ICommandHandler) exposed as POST."
+        },
+        {
+          "choice": "query",
+          "description": "A read-only use case (IQuery / IQueryHandler) exposed as GET."
+        }
+      ],
+      "description": "Kind of use case to generate."
+    },
+    "response": {
+      "type": "parameter",
+      "datatype": "text",
+      "description": "Response type. Optional for commands (omit it for a command that returns no value). For queries, omit it to generate a <Name>Response class.",
+      "defaultValue": ""
+    },
+    "isQuery": {
+      "type": "computed",
+      "value": "(kind == \"query\")"
+    },
+    "hasResponseType": {
+      "type": "computed",
+      "value": "(response != \"\")"
+    },
+    "hasResponse": {
+      "type": "computed",
+      "value": "(isQuery || hasResponseType)"
+    },
+    "generateResponseClass": {
+      "type": "computed",
+      "value": "(isQuery && !hasResponseType)"
+    },
+    "defaultResponseName": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "appendResponse"
+    },
+    "responseName": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "response",
+        "fallbackVariableName": "defaultResponseName",
+        "defaultValue": ""
+      },
+      "replaces": "ResponseType"
+    },
+    "moduleRoute": {
+      "type": "derived",
+      "valueSource": "module",
+      "valueTransform": "kebab",
+      "replaces": "module-route"
+    },
+    "featureRoute": {
+      "type": "derived",
+      "valueSource": "name",
+      "valueTransform": "kebab",
+      "replaces": "feature-route"
+    }
+  },
+  "sources": [
+    {
+      "source": "./",
+      "target": "./",
+      "modifiers": [
+        {
+          "condition": "(isQuery)",
+          "exclude": [
+            "src/Application/ModuleName/FeatureName/FeatureNameCommand.cs",
+            "src/Application/ModuleName/FeatureName/FeatureNameCommandHandler.cs",
+            "src/Application/ModuleName/FeatureName/FeatureNameCommandValidator.cs"
+          ]
+        },
+        {
+          "condition": "(!isQuery)",
+          "exclude": [
+            "src/Application/ModuleName/FeatureName/FeatureNameQuery.cs",
+            "src/Application/ModuleName/FeatureName/FeatureNameQueryHandler.cs"
+          ]
+        },
+        {
+          "condition": "(!generateResponseClass)",
+          "exclude": [
+            "src/Application/ModuleName/FeatureName/FeatureNameResponse.cs"
+          ]
+        }
+      ]
+    }
+  ],
+  "postActions": [
+    {
+      "description": "Explain what was generated.",
+      "manualInstructions": [
+        {
+          "text": "Feature generated. Implement the handler logic, adjust the route, and replace the placeholder error. Handlers, validators and decorators are registered automatically."
+        }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "continueOnError": true
+    }
+  ]
+}

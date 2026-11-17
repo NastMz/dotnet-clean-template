@@ -1,4 +1,7 @@
 param(
+    # Local packs the template pack from this repository; Published installs the latest stable version from nuget.org.
+    [ValidateSet("Local", "Published")]
+    [string]$Source = "Local",
     [string]$PackageVersion = "0.0.0-local",
     [string]$Configuration = "Release"
 )
@@ -22,25 +25,33 @@ $aspireOutput = Join-Path $scratchRoot "aspire"
 $packagePath = Join-Path $packageOutput ("NastMz.CleanArchitecture.Templates.{0}.nupkg" -f $PackageVersion)
 
 try {
-    if (Test-Path $packageOutput) {
-        Remove-Item -LiteralPath $packageOutput -Recurse -Force
-    }
-
-    New-Item -ItemType Directory -Path $packageOutput | Out-Null
     New-Item -ItemType Directory -Path $scratchRoot | Out-Null
 
     Push-Location $repoRoot
 
-    Invoke-Dotnet restore .\NastMz.CleanArchitecture.Templates.csproj
-    Invoke-Dotnet pack .\NastMz.CleanArchitecture.Templates.csproj `
-        -c $Configuration `
-        --no-restore `
-        -o $packageOutput `
-        "-p:PackageVersion=$PackageVersion" `
-        "-p:Version=$PackageVersion"
-
     dotnet new uninstall NastMz.CleanArchitecture.Templates | Out-Null
-    Invoke-Dotnet new install $packagePath
+
+    if ($Source -eq "Local") {
+        if (Test-Path $packageOutput) {
+            Remove-Item -LiteralPath $packageOutput -Recurse -Force
+        }
+
+        New-Item -ItemType Directory -Path $packageOutput | Out-Null
+
+        Invoke-Dotnet restore .\NastMz.CleanArchitecture.Templates.csproj
+        Invoke-Dotnet pack .\NastMz.CleanArchitecture.Templates.csproj `
+            -c $Configuration `
+            --no-restore `
+            -o $packageOutput `
+            "-p:PackageVersion=$PackageVersion" `
+            "-p:Version=$PackageVersion"
+
+        Invoke-Dotnet new install $packagePath
+    }
+    else {
+        # Without an explicit version, dotnet new install resolves the latest stable version.
+        Invoke-Dotnet new install NastMz.CleanArchitecture.Templates --add-source https://api.nuget.org/v3/index.json
+    }
 
     Invoke-Dotnet new nast-clean -n Validation.Clean -o $cleanOutput
     Invoke-Dotnet new nast-clean-aspire -n Validation.Aspire -o $aspireOutput

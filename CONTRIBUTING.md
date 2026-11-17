@@ -23,9 +23,17 @@ The script:
 6. runs the generated architecture tests;
 7. removes the temporary artifacts.
 
+To validate the latest version already published on nuget.org instead of the local sources, run:
+
+```powershell
+.\scripts\validate-generated-templates.ps1 -Source Published
+```
+
 ## CI
 
 The repository includes `.github/workflows/ci.yml` to run this validation automatically on push and pull request.
+
+The weekly scheduled run (and manual runs) also validate the latest published package, so newly disclosed vulnerabilities in what users install today fail CI even when `main` is already fixed.
 
 ## Releases
 

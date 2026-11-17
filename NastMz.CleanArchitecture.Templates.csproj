@@ -27,5 +27,9 @@
           Exclude="aspire-template\**\bin\**;aspire-template\**\obj\**;aspire-template\**\.vs\**;aspire-template\**\.idea\**;aspire-template\**\.git\**;aspire-template\**\.containers\**;aspire-template\**\*.user;aspire-template\**\*.suo;aspire-template\**\*.userosscache;aspire-template\**\*.cache"
           Pack="true"
           PackagePath="content\aspire-template" />
+    <None Include="item-templates\**\*"
+          Exclude="item-templates\**\bin\**;item-templates\**\obj\**"
+          Pack="true"
+          PackagePath="content\item-templates" />
   </ItemGroup>
 </Project>

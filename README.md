@@ -72,6 +72,34 @@ The generated application includes:
 
 For the full breakdown, see [Template features](https://github.com/NastMz/dotnet-clean-template/blob/main/docs/features.md).
 
+## Add a feature
+
+The pack also includes the `nast-feature` item template, which scaffolds one use case: the message, its handler, a validator (commands only), and a Minimal API endpoint. Run it from the root of a generated solution (the folder that contains `src/`):
+
+```powershell
+# Command without a return value -> POST, 204 No Content on success
+dotnet new nast-feature -n Archive --module Todos
+
+# Command that returns a value -> POST, 200 OK
+dotnet new nast-feature -n Duplicate --module Todos --response Guid
+
+# Query with a generated GetSummaryResponse class -> GET
+dotnet new nast-feature -n GetSummary --module Todos --kind query
+
+# Query with an existing response type
+dotnet new nast-feature -n GetProfile --module Users --kind query --response UserResponse
+```
+
+| Option | Description |
+| --- | --- |
+| `-n` | Use case name. Files and namespaces are derived from it, for example `ArchiveCommand` in `Application.Todos.Archive`. |
+| `--module` | Required. Feature folder, for example `Todos`. |
+| `--kind` | `command` (default) or `query`. |
+| `--response` | Response type. Optional for commands; for queries, omit it to generate a `<Name>Response` class. Add the `using` for types from other namespaces. |
+
+Nothing has to be registered by hand: Scrutor picks up the handler and validator, the validation, caching and logging decorators wrap it, and the endpoint is discovered through `IEndpoint`. The generated handler returns a `NotImplemented` failure until you write the use case. The route (`<module>/{id:guid}/<name>`, in kebab case) and the OpenAPI tag (the module name) are starting points to adjust.
+
+
 ## Docker Compose template
 
 Use:

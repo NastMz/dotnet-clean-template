@@ -60,6 +60,12 @@ try {
     # which dotnet only picks up when it runs from inside the generated directory.
     Push-Location $cleanOutput
     try {
+        # Exercise every nast-feature variant so the generated slices are compiled and checked by the architecture tests.
+        Invoke-Dotnet new nast-feature -n Archive --module Todos
+        Invoke-Dotnet new nast-feature -n Duplicate --module Todos --response Guid
+        Invoke-Dotnet new nast-feature -n GetSummary --module Todos --kind query
+        Invoke-Dotnet new nast-feature -n GetProfile --module UserProfiles --kind query --response "List<string>"
+
         Invoke-Dotnet restore "Validation.Clean.slnx"
         Invoke-Dotnet build (Join-Path "src" "Web.Api" "Web.Api.csproj") --no-restore -c $Configuration
         Invoke-Dotnet test --project (Join-Path "tests" "ArchitectureTests" "ArchitectureTests.csproj") --no-restore -c $Configuration
